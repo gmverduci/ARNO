@@ -25,7 +25,6 @@ public class Utente {
     private String username;
     private String password;
 
-    private LocalDateTime dataAssunzione;
 
     private StatoUtente statoUtente;
 
