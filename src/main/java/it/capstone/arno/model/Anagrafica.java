@@ -24,6 +24,5 @@ public class Anagrafica {
     private String indirizzo;
     private String numeroTelefono;
     private String numeroTelefonoContatto;
-    private String email;
     private LocalDateTime dataRegistrazione;
 }
