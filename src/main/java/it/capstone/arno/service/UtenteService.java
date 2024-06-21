@@ -1,10 +1,11 @@
 package it.capstone.arno.service;
 
-import ch.qos.logback.classic.encoder.JsonEncoder;
 import it.capstone.arno.DTO.UtenteDTO;
+import it.capstone.arno.enums.Ruolo;
 import it.capstone.arno.enums.StatoUtente;
 import it.capstone.arno.exception.BadRequestException;
 import it.capstone.arno.exception.NotFoundException;
+import it.capstone.arno.exception.UnauthorizedException;
 import it.capstone.arno.model.Anagrafica;
 import it.capstone.arno.model.Utente;
 import it.capstone.arno.repository.AnagraficaRepository;
@@ -61,7 +62,7 @@ public class UtenteService {
         }
     }
 
-    public Utente getUtenteById(Long id) {
+    public Utente getUtenteById(int id) {
         Optional<Utente> userOptional = utenteRepository.findById(id);
 
         if (userOptional.isPresent()) {
@@ -80,7 +81,7 @@ public class UtenteService {
         return utenteRepository.findAll();
     }
 
-    public Utente saveUtente(UtenteDTO utenteDTO) {
+    public String saveUtente(UtenteDTO utenteDTO) {
         Optional<Utente> userOptionalByEmail = utenteRepository.findByEmail(utenteDTO.getEmail());
 
         if (userOptionalByEmail.isPresent()) {
@@ -116,8 +117,69 @@ public class UtenteService {
 
         sendEmail(utenteDTO.getEmail(), "Registrazione Arno", "Benvenuto in ARNO. Ecco i tuoi dati di registrazione:" + "\n" + "\nUsername: " + utenteDTO.getUsername() + "\nRuolo: " + utenteDTO.getRuolo().toString());
 
+        utente = utenteRepository.save(utente);
+
+        return "Utente id: " + utente.getId() + " e ruolo: " + utente.getRuolo().toString() + " creato con successo.";
+    }
+
+    public Utente updateUtente(int id, UtenteDTO utenteDTO) {
+        Utente utente = utenteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Utente non trovato"));
+
+        if (utenteDTO.getEmail() != null) {
+            Optional<Utente> userOptionalByEmail = utenteRepository.findByEmail(utenteDTO.getEmail());
+            if (userOptionalByEmail.isPresent() && userOptionalByEmail.get().getId() != (id)) {
+                throw new BadRequestException("L'email risulta già associata a un account esistente.");
+            }
+            utente.setEmail(utenteDTO.getEmail());
+        }
+
+        if (utenteDTO.getUsername() != null) {
+            Optional<Utente> userOptionalByUsername = utenteRepository.findByUsername(utenteDTO.getUsername());
+            if (userOptionalByUsername.isPresent() && userOptionalByUsername.get().getId() != (id)) {
+                throw new BadRequestException("Lo username risulta già associato a un account esistente.");
+            }
+            utente.setUsername(utenteDTO.getUsername());
+        }
+
+        Anagrafica anagrafica = utente.getAnagrafica();
+            anagrafica.setNome(utenteDTO.getNome());
+            anagrafica.setCognome(utenteDTO.getCognome());
+            anagrafica.setDataNascita(utenteDTO.getDataNascita());
+            anagrafica.setSesso(utenteDTO.getSesso());
+            anagrafica.setCodiceFiscale(utenteDTO.getCodiceFiscale());
+            anagrafica.setIndirizzo(utenteDTO.getIndirizzo());
+            anagrafica.setNumeroTelefono(utenteDTO.getNumeroTelefono());
+
+        anagrafica = anagraficaRepository.save(anagrafica);
+
+        if (utenteDTO.getPassword() != null && !utenteDTO.getPassword().isEmpty()) {
+            utente.setPassword(passwordEncoder.encode(utenteDTO.getPassword()));
+        }
+        if (utenteDTO.getRuolo() != utente.getRuolo()) {
+            throw new UnauthorizedException("Non si hanno i permessi per modificare il ruolo di un utente.");
+        }
+
         return utenteRepository.save(utente);
     }
+
+    public void deleteUtente(int id) {
+        Utente utente = utenteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Utente non trovato"));
+
+        utenteRepository.delete(utente);
+    }
+
+
+    public void updateRuoloUtente(int id, Ruolo ruoloUtente) {
+        Utente utente = utenteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Utente non trovato"));
+
+        utente.setRuolo(ruoloUtente);
+
+        utenteRepository.save(utente);
+    }
+
 
     private void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();

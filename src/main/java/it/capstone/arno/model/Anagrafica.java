@@ -4,6 +4,7 @@ import it.capstone.arno.enums.Sesso;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,7 +16,7 @@ public class Anagrafica {
 
     private String nome;
     private String cognome;
-    private LocalDateTime dataNascita;
+    private LocalDate dataNascita;
 
     @Enumerated(EnumType.STRING)
     private Sesso sesso;

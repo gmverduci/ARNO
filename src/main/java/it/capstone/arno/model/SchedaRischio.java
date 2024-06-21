@@ -18,6 +18,7 @@ public class SchedaRischio {
     @JoinColumn(name = "ricovero_id")
     private Ricovero ricovero;
 
+
     private String rischio;
     private String descrizione;
 }
