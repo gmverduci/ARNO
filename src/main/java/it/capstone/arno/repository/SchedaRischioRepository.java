@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SchedaRischioRepository extends JpaRepository<SchedaRischio, Long> {
+public interface SchedaRischioRepository extends JpaRepository<SchedaRischio, Integer> {
 }
