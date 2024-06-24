@@ -7,6 +7,7 @@ import it.capstone.arno.exception.BadRequestException;
 import it.capstone.arno.exception.NotFoundException;
 import it.capstone.arno.exception.UnauthorizedException;
 import it.capstone.arno.model.Anagrafica;
+import it.capstone.arno.model.Paziente;
 import it.capstone.arno.model.Utente;
 import it.capstone.arno.repository.AnagraficaRepository;
 import it.capstone.arno.repository.UtenteRepository;
@@ -20,6 +21,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +48,24 @@ public class UtenteService {
             throw new NotFoundException("Utente " + username + " non trovato.");
 
         }
+    }
+
+    public Page<Utente> getUtentiByUsernameContainingPageable(String usernameParziale, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("username"));
+        return utenteRepository.findByUsernameContainingPageable(usernameParziale, pageable);
+    }
+
+    public List<Utente> getUtenteByNomeOCognomeParziale(String nomeParziale, String cognomeParziale) {
+        if ((nomeParziale == null || nomeParziale.isEmpty()) && (cognomeParziale == null || cognomeParziale.isEmpty())) {
+            return new ArrayList<>();
+        }
+        if (nomeParziale == null || nomeParziale.isEmpty()) {
+            return utenteRepository.findByAnagraficaCognomeContaining(cognomeParziale);
+        }
+        if (cognomeParziale == null || cognomeParziale.isEmpty()) {
+            return utenteRepository.findByAnagraficaNomeContaining(nomeParziale);
+        }
+        return utenteRepository.findByAnagraficaNomeContainingOrAnagraficaCognomeContaining(nomeParziale, cognomeParziale);
     }
 
     public List<Utente> getUserByUsernameContaining(String usernameParziale) {
@@ -122,7 +142,7 @@ public class UtenteService {
         return "Utente id: " + utente.getId() + " e ruolo: " + utente.getRuolo().toString() + " creato con successo.";
     }
 
-    public Utente updateUtente(int id, UtenteDTO utenteDTO) {
+    public Utente updateUtente(UtenteDTO utenteDTO, int id) {
         Utente utente = utenteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Utente non trovato"));
 
@@ -163,11 +183,13 @@ public class UtenteService {
         return utenteRepository.save(utente);
     }
 
-    public void deleteUtente(int id) {
+    public String deleteUtente(int id) {
         Utente utente = utenteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Utente non trovato"));
 
         utenteRepository.delete(utente);
+
+        return "Utente id: " + id + " eliminato con successo.";
     }
 
 

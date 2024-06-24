@@ -26,5 +26,7 @@ public class Consegna {
 
     private LocalDateTime dataCreazione;
     private String contenuto;
-    private String tipo;
+    private String titolo;
+
+    Ricovero ricovero;
 }
