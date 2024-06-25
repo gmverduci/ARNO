@@ -8,6 +8,7 @@ import it.capstone.arno.service.AuthService;
 import it.capstone.arno.service.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,22 +24,27 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-
     @PostMapping("/signup")
-    public String utenteSignupDTO(@RequestBody @Validated UtenteDTO utenteDTO, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
-            throw new BadRequestException(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).reduce("",(s, s2) -> s+s2 ));
+    public ResponseEntity<String> utenteSignupDTO(@RequestBody @Validated UtenteDTO utenteDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new BadRequestException(bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .reduce("", (s, s2) -> s + s2));
         }
 
-        return utenteService.saveUtente(utenteDTO);
+        String result = utenteService.saveUtente(utenteDTO);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/login")
-    public AuthenticationResponse login(@RequestBody @Validated UtenteLoginDTO utenteLoginDTO, BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
-            throw new BadRequestException(bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).reduce("",(s, s2) -> s+s2 ));
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Validated UtenteLoginDTO utenteLoginDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new BadRequestException(bindingResult.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .reduce("", (s, s2) -> s + s2));
         }
 
-        return authService.authenticateUserAndCreateToken(utenteLoginDTO);
+        AuthenticationResponse response = authService.authenticateUserAndCreateToken(utenteLoginDTO);
+        return ResponseEntity.ok(response);
     }
 }
