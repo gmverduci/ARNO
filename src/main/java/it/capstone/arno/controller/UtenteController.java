@@ -55,8 +55,8 @@ public class UtenteController {
 
     @GetMapping("/users/search")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public List<Utente> getUsersByNomeOCognomeParziale(@RequestParam(required = false) String nome, @RequestParam(required = false) String cognome) {
-        return utenteService.getPazienteByNomeOCognomeParziale(nome, cognome);
+    public List<Utente> getUtentiByNomeOCognomeParziale(@RequestParam(required = false) String nome, @RequestParam(required = false) String cognome) {
+        return utenteService.getUtenteByNomeOCognomeParziale(nome, cognome);
     }
 
 

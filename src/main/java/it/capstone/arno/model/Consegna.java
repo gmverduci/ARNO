@@ -28,5 +28,4 @@ public class Consegna {
     private String contenuto;
     private String titolo;
 
-    Ricovero ricovero;
 }

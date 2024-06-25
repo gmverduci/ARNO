@@ -29,4 +29,8 @@ public interface UtenteRepository extends JpaRepository<Utente, Integer> {
     List<Utente> findByAnagraficaNomeContaining(String nomeParziale);
 
     List<Utente> findByAnagraficaCognomeContaining(String cognomeParziale);
+
+    List<Utente> findByRuolo(String ruolo);
+
+    List<Utente> findByStatoUtente(String statoUtente);
 }

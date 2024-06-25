@@ -11,8 +11,14 @@ import it.capstone.arno.repository.ConsegnaRepository;
 import it.capstone.arno.repository.RicoveroRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public class ConsegnaService {
@@ -33,31 +39,20 @@ public class ConsegnaService {
         consegna.setTitolo(consegnaDTO.getTitolo());
         consegna.setContenuto(consegnaDTO.getContenuto());
         consegna.setUtente(consegnaDTO.getUtente());
+        consegna.setDataCreazione(LocalDateTime.now());
+
         if (consegnaDTO.getPaziente() != null) {
             Paziente paziente = consegnaDTO.getPaziente();
+            consegna.setPaziente(paziente);
 
-            Optional<Ricovero> optionalRicovero = ricoveroRepository.findTopByPazienteAndStatoOrderByDataInizioDesc(paziente, StatoRicovero.IN_CORSO);
-            if (optionalRicovero.isPresent()) {
-                Ricovero ricovero = optionalRicovero.get();
-                consegna.setRicovero(ricovero);
-
-                Optional<CartellaClinica> optionalCartellaClinica = cartellaClinicaRepository.findByRicovero(ricovero);
-                if (optionalCartellaClinica.isPresent()) {
-                    CartellaClinica cartellaClinica = optionalCartellaClinica.get();
-                    consegna.setCartellaClinica(cartellaClinica);
-                } else {
-                    throw new NotFoundException("Cartella clinica non trovata per il ricovero specificato.");
-                }
-            } else {
-                throw new NotFoundException("Ricovero in corso non trovato per il paziente specificato.");
-            }
+            CartellaClinica cartellaClinica = cartellaClinicaRepository.findByPaziente(paziente);
+            consegna.setCartellaClinica(cartellaClinica);
         }
-        consegna.setDataCreazione(LocalDateTime.now());
 
         return "Consegna creata con ID: " + consegna.getId() + ".";
     }
 
-    public String updateConsegna(int id, @Valid ConsegnaDTO consegnaDTO) {
+    public Consegna updateConsegna(int id, @Valid ConsegnaDTO consegnaDTO) {
         Optional<Consegna> optionalConsegna = consegnaRepository.findById(id);
         if (optionalConsegna.isPresent()) {
             Consegna consegna = optionalConsegna.get();
@@ -66,7 +61,7 @@ public class ConsegnaService {
             consegna.setUtente(consegnaDTO.getUtente());
 
             consegnaRepository.save(consegna);
-            return "Consegna aggiornata con successo.";
+            return consegna;
         } else {
             throw new NotFoundException("Consegna non trovata con ID: " + id);
         }
@@ -82,6 +77,17 @@ public class ConsegnaService {
         }
     }
 
+    public Page<Consegna> getAllConsegnePageable(int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return consegnaRepository.findAll(pageable);
+    }
 
 
+    public List<Consegna> getConsegneByPaziente(int id) {
+        return consegnaRepository.findByPazienteId(id);
+    }
+
+    public List<Consegna> getConsegneByData(LocalDate data) {
+        return consegnaRepository.findByDataCreazione(data);
+    }
 }
