@@ -34,6 +34,10 @@ public class PazienteService {
     MailSender mailSender;
 
 
+    public List<Paziente> getAllPazienti() {
+        return pazienteRepository.findAll();
+    }
+
     public Paziente getPazienteByCodiceFiscale(String codiceFiscale) {
         Optional<Paziente> pazienteOptional = pazienteRepository.findByCodiceFiscale(codiceFiscale);
 
@@ -119,4 +123,12 @@ public class PazienteService {
     }
 
 
+    public Paziente getPazienteById(int id) {
+        Optional<Paziente> pazienteOptional = pazienteRepository.findById(id);
+        if (pazienteOptional.isPresent()) {
+            return pazienteOptional.get();
+        } else {
+            throw new NotFoundException("Paziente con id \"" + id + "\" non trovato.");
+        }
+    }
 }
