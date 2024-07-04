@@ -19,12 +19,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class UtenteService {
 
     @Autowired
@@ -52,7 +54,7 @@ public class UtenteService {
 
     public Page<Utente> getUtentiByUsernameContainingPageable(String usernameParziale, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("username"));
-        return utenteRepository.findByUsernameContainingPageable(usernameParziale, pageable);
+        return utenteRepository.findByUsernameContaining(usernameParziale, pageable);
     }
 
     public List<Utente> getUtenteByNomeOCognomeParziale(String nomeParziale, String cognomeParziale) {
@@ -117,7 +119,6 @@ public class UtenteService {
         Anagrafica anagrafica = new Anagrafica();
         anagrafica.setNome(utenteDTO.getNome());
         anagrafica.setCognome(utenteDTO.getCognome());
-        anagrafica.setDataNascita(utenteDTO.getDataNascita());
         anagrafica.setSesso(utenteDTO.getSesso());
         anagrafica.setCodiceFiscale(utenteDTO.getCodiceFiscale());
         anagrafica.setIndirizzo(utenteDTO.getIndirizzo());
@@ -132,6 +133,7 @@ public class UtenteService {
         utente.setPassword(passwordEncoder.encode(utenteDTO.getPassword()));
         utente.setRuolo(utenteDTO.getRuolo());
         utente.setStatoUtente(StatoUtente.INATTIVO);
+        utente.setDarkMode(false);
 
         utente.setAnagrafica(anagrafica);
 
@@ -165,7 +167,6 @@ public class UtenteService {
         Anagrafica anagrafica = utente.getAnagrafica();
             anagrafica.setNome(utenteDTO.getNome());
             anagrafica.setCognome(utenteDTO.getCognome());
-            anagrafica.setDataNascita(utenteDTO.getDataNascita());
             anagrafica.setSesso(utenteDTO.getSesso());
             anagrafica.setCodiceFiscale(utenteDTO.getCodiceFiscale());
             anagrafica.setIndirizzo(utenteDTO.getIndirizzo());

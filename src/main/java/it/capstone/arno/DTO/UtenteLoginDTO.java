@@ -6,8 +6,8 @@ import lombok.Data;
 
 @Data
 public class UtenteLoginDTO {
-    @NotBlank(message = "Inserire username.")
-    private String username;
+    @NotBlank(message = "Inserire email.")
+    private String email;
 
     @NotBlank(message = "Inserire la password.")
     private String password;

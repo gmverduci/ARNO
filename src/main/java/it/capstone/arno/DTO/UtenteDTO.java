@@ -24,7 +24,6 @@ public class UtenteDTO {
     @Size(max = 28, message = "Lunghezza max. cognome: 28 caratteri.")
     private String cognome;
 
-    private LocalDate dataNascita;
     private Sesso sesso;
 
     @NotBlank(message = "Inserire indirizzo.")

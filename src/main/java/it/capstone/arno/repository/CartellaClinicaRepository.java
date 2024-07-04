@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface CartellaClinicaRepository extends JpaRepository<CartellaClinica, Integer> {
     Optional<CartellaClinica> findByRicovero(Ricovero ricovero);
 
-    CartellaClinica findByPaziente(Paziente paziente);
+    Optional<CartellaClinica> findByRicoveroPaziente(Paziente paziente);
 }

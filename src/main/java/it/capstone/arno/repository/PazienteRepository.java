@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface PazienteRepository extends JpaRepository<Paziente, Integer> {
 
-    public Optional<Paziente> findByCodiceFiscale(String codiceFiscale);
+    public Optional<Paziente> findByAnagraficaCodiceFiscale(String codiceFiscale);
 
     List<Paziente> findByAnagraficaNomeContainingOrAnagraficaCognomeContaining(String nomeParziale, String cognomeParziale);
 

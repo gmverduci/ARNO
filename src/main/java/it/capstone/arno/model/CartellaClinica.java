@@ -17,4 +17,6 @@ public class CartellaClinica {
     private String diagnosiIniziale;
     private String terapie;
     private String noteCliniche;
+
+
 }

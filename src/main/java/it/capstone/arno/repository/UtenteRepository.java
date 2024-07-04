@@ -1,5 +1,6 @@
 package it.capstone.arno.repository;
 
+import it.capstone.arno.enums.StatoUtente;
 import it.capstone.arno.model.Paziente;
 import it.capstone.arno.model.Utente;
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ public interface UtenteRepository extends JpaRepository<Utente, Integer> {
 
     public Optional<Utente> findByUsername(String username);
 
-    Page<Utente> findByUsernameContainingPageable(String usernameParziale, Pageable pageable);
+    Page<Utente> findByUsernameContaining(String usernameParziale, Pageable pageable);
 
 
     public List<Utente> findByUsernameContaining (String usernameParziale);
@@ -32,5 +33,5 @@ public interface UtenteRepository extends JpaRepository<Utente, Integer> {
 
     List<Utente> findByRuolo(String ruolo);
 
-    List<Utente> findByStatoUtente(String statoUtente);
+    List<Utente> findByStatoUtente(StatoUtente statoUtente);
 }

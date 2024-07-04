@@ -16,11 +16,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class PazienteService {
 
 
@@ -39,7 +41,7 @@ public class PazienteService {
     }
 
     public Paziente getPazienteByCodiceFiscale(String codiceFiscale) {
-        Optional<Paziente> pazienteOptional = pazienteRepository.findByCodiceFiscale(codiceFiscale);
+        Optional<Paziente> pazienteOptional = pazienteRepository.findByAnagraficaCodiceFiscale(codiceFiscale);
 
         if (pazienteOptional.isPresent()) {
             return pazienteOptional.get();
@@ -65,7 +67,7 @@ public class PazienteService {
     }
 
     public String savePaziente(@Valid PazienteDTO pazienteDTO) {
-        Optional<Paziente> patientOptionalByEmail = pazienteRepository.findByCodiceFiscale(pazienteDTO.getCodiceFiscale());
+        Optional<Paziente> patientOptionalByEmail = pazienteRepository.findByAnagraficaCodiceFiscale(pazienteDTO.getCodiceFiscale());
 
         if (patientOptionalByEmail.isPresent()) {
             throw new BadRequestException("Paziente con codice fiscale \"" + pazienteDTO.getCodiceFiscale() + "\" già presente.");

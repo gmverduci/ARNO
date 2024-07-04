@@ -30,6 +30,7 @@ public class Utente implements UserDetails {
     private String username;
     private String password;
 
+    @Enumerated(EnumType.STRING)
 
     private StatoUtente statoUtente;
 

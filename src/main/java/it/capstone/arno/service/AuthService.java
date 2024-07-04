@@ -21,7 +21,7 @@ public class AuthService {
 
 
     public AuthenticationResponse authenticateUserAndCreateToken(UtenteLoginDTO utenteLoginDTO) {
-        Utente user = utenteService.getUtenteByUsername(utenteLoginDTO.getUsername());
+        Utente user = utenteService.getUtenteByEmail(utenteLoginDTO.getEmail());
 
         if (passwordEncoder.matches(utenteLoginDTO.getPassword(), user.getPassword())) {
 

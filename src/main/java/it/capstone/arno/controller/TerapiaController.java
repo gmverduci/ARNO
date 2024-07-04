@@ -2,6 +2,7 @@ package it.capstone.arno.controller;
 
 import it.capstone.arno.DTO.TerapiaDTO;
 import it.capstone.arno.exception.BadRequestException;
+import it.capstone.arno.service.TerapiaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,8 +18,6 @@ public class TerapiaController {
     @Autowired
     TerapiaService terapiaService;
 
-    @Autowired
-    TerapiaService terapiaService;
 
     @PostMapping("/terapie")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'INFERMIERE', 'MEDICO')")

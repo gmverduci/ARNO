@@ -15,12 +15,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ConsegnaService {
 
 
@@ -45,12 +47,18 @@ public class ConsegnaService {
             Paziente paziente = consegnaDTO.getPaziente();
             consegna.setPaziente(paziente);
 
-            CartellaClinica cartellaClinica = cartellaClinicaRepository.findByPaziente(paziente);
-            consegna.setCartellaClinica(cartellaClinica);
+            Optional<CartellaClinica> optionalCartellaClinica = cartellaClinicaRepository.findByRicoveroPaziente(paziente);
+            if (optionalCartellaClinica.isPresent()) {
+                consegna.setCartellaClinica(optionalCartellaClinica.get());
+            } else {
+                throw new RuntimeException("Nessuna CartellaClinica trovata per il Paziente specificato");
+            }
         }
 
+        consegnaRepository.save(consegna);
         return "Consegna creata con ID: " + consegna.getId() + ".";
     }
+
 
     public Consegna updateConsegna(int id, @Valid ConsegnaDTO consegnaDTO) {
         Optional<Consegna> optionalConsegna = consegnaRepository.findById(id);

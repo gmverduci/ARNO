@@ -39,13 +39,19 @@ public class TerapiaService {
             Paziente paziente = terapiaDTO.getPaziente();
             terapia.setPaziente(paziente);
 
-            CartellaClinica cartellaClinica = cartellaClinicaRepository.findByPaziente(paziente);
-            terapia.setCartellaClinica(cartellaClinica);
+            // Trova CartellaClinica tramite Ricovero e Paziente
+            Optional<CartellaClinica> optionalCartellaClinica = cartellaClinicaRepository.findByRicoveroPaziente(paziente);
+            if (optionalCartellaClinica.isPresent()) {
+                terapia.setCartellaClinica(optionalCartellaClinica.get());
+            } else {
+                throw new RuntimeException("Nessuna CartellaClinica trovata per il Paziente specificato");
+            }
         }
 
         terapiaRepository.save(terapia);
         return "Terapia salvata con ID: " + terapia.getId();
     }
+
 
     public Terapia updateTerapia(int id, @Valid TerapiaDTO terapiaDTO) {
         Optional<Terapia> optionalTerapia = terapiaRepository.findById(id);
