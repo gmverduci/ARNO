@@ -39,6 +39,13 @@ public class ConsegnaController {
         return ResponseEntity.ok(consegne);
     }
 
+    @GetMapping("/consegne/paziente/{idPaziente}/incorso")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'INFERMIERE', 'MEDICO', 'OSS')")
+    public ResponseEntity<List<Consegna>> getConsegneByPazienteAndRicoveroInCorso(@PathVariable int idPaziente) {
+        List<Consegna> consegne = consegnaService.getConsegneByPazienteAndRicoveroInCorso(idPaziente);
+        return ResponseEntity.ok(consegne);
+    }
+
     @GetMapping("/consegne/data/{data}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'INFERMIERE', 'MEDICO', 'OSS')")
     public ResponseEntity<List<Consegna>> getConsegneByData(@PathVariable String data) {

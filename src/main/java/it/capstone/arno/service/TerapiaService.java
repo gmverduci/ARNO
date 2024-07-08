@@ -1,6 +1,7 @@
 package it.capstone.arno.service;
 
 import it.capstone.arno.DTO.TerapiaDTO;
+import it.capstone.arno.enums.StatoRicovero;
 import it.capstone.arno.exception.BadRequestException;
 import it.capstone.arno.exception.NotFoundException;
 import it.capstone.arno.model.CartellaClinica;
@@ -83,5 +84,9 @@ public class TerapiaService {
 
     public List<Terapia> getTerapieByPaziente(int id) {
         return terapiaRepository.findByPazienteId(id);
+    }
+
+    public List<Terapia> getTerapieByPazienteAndRicoveroInCorso(int pazienteId) {
+        return terapiaRepository.findByPazienteIdAndRicoveroStato(pazienteId, StatoRicovero.IN_CORSO);
     }
 }

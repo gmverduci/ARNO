@@ -2,6 +2,7 @@ package it.capstone.arno.controller;
 
 import it.capstone.arno.DTO.UtenteDTO;
 import it.capstone.arno.exception.BadRequestException;
+import it.capstone.arno.model.Paziente;
 import it.capstone.arno.model.Utente;
 import it.capstone.arno.service.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,20 @@ public class UtenteController {
     @Autowired
     UtenteService utenteService;
 
-    @GetMapping("/users")
+    @GetMapping("/users-p")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<Page<Utente>> getUtentiPageable(@RequestParam(defaultValue = "0") int page,
                                                           @RequestParam(defaultValue = "10") int size,
                                                           @RequestParam(defaultValue = "id") String sortBy){
         Page<Utente> utenti = utenteService.getAllUtentiPageable(page, size, sortBy);
         return ResponseEntity.ok(utenti);
+    }
+
+    @GetMapping("/users")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<List<Utente>> getUtenti() {
+        List<Utente> utenti = utenteService.getAllUtenti();
+        return ResponseEntity.ok().body(utenti);
     }
 
     @GetMapping("/users/{id}")
