@@ -3,6 +3,7 @@ package it.capstone.arno.controller;
 import it.capstone.arno.DTO.OrdineDTO;
 import it.capstone.arno.enums.StatoOrdine;
 import it.capstone.arno.exception.BadRequestException;
+import it.capstone.arno.model.Consegna;
 import it.capstone.arno.model.Ordine;
 import it.capstone.arno.service.OrdineService;
 import jakarta.validation.Valid;
@@ -38,6 +39,13 @@ public class OrdineController {
     public ResponseEntity<List<Ordine>> getOrdiniByPaziente(@PathVariable Long idPaziente) {
         List<Ordine> ordini = ordineService.getOrdiniByPaziente(idPaziente);
         return ResponseEntity.ok(ordini);
+    }
+
+    @GetMapping("/ordini/paziente/{idPaziente}/incorso")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'INFERMIERE', 'MEDICO', 'OSS')")
+    public ResponseEntity<List<Ordine>> getOrdiniByPazienteAndRicoveroInCorso(@PathVariable int idPaziente) {
+        List<Ordine> ordine = ordineService.getOrdiniByPazienteAndRicoveroInCorso(idPaziente);
+        return ResponseEntity.ok(ordine);
     }
 
     @GetMapping("/ordini/stato/{stato}")

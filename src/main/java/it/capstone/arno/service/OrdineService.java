@@ -3,6 +3,7 @@ package it.capstone.arno.service;
 
 import it.capstone.arno.DTO.OrdineDTO;
 import it.capstone.arno.enums.StatoOrdine;
+import it.capstone.arno.enums.StatoRicovero;
 import it.capstone.arno.exception.BadRequestException;
 import it.capstone.arno.exception.NotFoundException;
 import it.capstone.arno.model.Ordine;
@@ -72,5 +73,9 @@ public class OrdineService {
 
     public List<Ordine> getOrdiniByStato(StatoOrdine stato) {
         return ordineRepository.findByStato(stato);
+    }
+
+    public List<Ordine> getOrdiniByPazienteAndRicoveroInCorso(int pazienteId) {
+        return ordineRepository.findByPazienteIdAndRicoveroStato(pazienteId, StatoRicovero.IN_CORSO);
     }
 }

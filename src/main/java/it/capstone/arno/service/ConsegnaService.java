@@ -98,4 +98,8 @@ public class ConsegnaService {
     public List<Consegna> getConsegneByData(LocalDate data) {
         return consegnaRepository.findByDataCreazione(data);
     }
+
+    public List<Consegna> getConsegneByPazienteAndRicoveroInCorso(int pazienteId) {
+        return consegnaRepository.findByPazienteIdAndRicoveroStato(pazienteId, StatoRicovero.IN_CORSO);
+    }
 }

@@ -78,7 +78,7 @@ public class PazienteService {
         anagrafica.setCognome(pazienteDTO.getCognome());
         anagrafica.setDataNascita(pazienteDTO.getDataNascita());
         anagrafica.setSesso(pazienteDTO.getSesso());
-        anagrafica.setCodiceFiscale(pazienteDTO.getCodiceFiscale());
+        anagrafica.setCodiceFiscale(pazienteDTO.getCodiceFiscale().toUpperCase());
         anagrafica.setIndirizzo(pazienteDTO.getIndirizzo());
         anagrafica.setNumeroTelefono(pazienteDTO.getNumeroTelefono());
         anagrafica.setNumeroTelefonoContatto(pazienteDTO.getNumeroTelefonoContatto());
