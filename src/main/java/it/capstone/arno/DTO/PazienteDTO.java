@@ -30,7 +30,7 @@ public class PazienteDTO {
 
 
     @NotBlank(message = "Inserire indirizzo.")
-    @Size(max = 28, message = "Lunghezza max. indirizzo: 28 caratteri.")
+    @Size(max = 58, message = "Lunghezza max. indirizzo: 28 caratteri.")
     private String indirizzo;
 
     @NotBlank(message = "Inserire numero di telefono.")
